@@ -16,12 +16,16 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { AgregarPropiedadComponent } from './components/agregar-propiedad/agregar-propiedad.component';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { UbicacionService } from './services/ubicacion.service';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { AbsNoSignPipe } from './pipes/absolute.pipe';
 
 @NgModule({
   declarations: [
     InventarioComponent,
     DialogSimpleComponent,
-    AgregarPropiedadComponent
+    AgregarPropiedadComponent,
+    AbsNoSignPipe
   ],
   imports: [
     CommonModule,
@@ -41,9 +45,12 @@ import { MatSelectModule } from '@angular/material/select';
     HttpClientModule,
     MatDialogModule,
     MatButtonModule,
-    MatInputModule
+    MatInputModule,
+    MatProgressSpinnerModule,
+
   ],providers:[
-    InventarioService
+    InventarioService,
+    UbicacionService
   ]
 })
 export class FeaturesModule { }

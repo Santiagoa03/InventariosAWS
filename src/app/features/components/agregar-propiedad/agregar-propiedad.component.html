@@ -1,4 +1,4 @@
-<mat-card>
+<mat-card *ngIf="validar">
   <mat-card-header class="bg-blue-800 text-white rounded-t-lg">
     <mat-card-title class="uppercase">{{ data.title }}</mat-card-title>
   </mat-card-header>
@@ -21,19 +21,15 @@
         </div>
         <div>
           <mat-form-field>
-            <mat-label>Ciudad</mat-label>
-            <input matInput formControlName="ciudad" />
-            <mat-error
-              *ngIf="form.get('ciudad')?.invalid && form.get('ciudad')?.touched"
-            >
-              {{ errorService.getErrorMessage(form, "ciudad") }}
-            </mat-error>
-          </mat-form-field>
-        </div>
-        <div>
-          <mat-form-field>
             <mat-label>Departamento</mat-label>
-            <input matInput formControlName="departamento" />
+            <mat-select
+              formControlName="departamento"
+              (selectionChange)="consultarCiudades($event.value)"
+            >
+              <mat-option *ngFor="let depto of dptos" [value]="depto.name">
+                {{ depto.id }} - {{ depto.name }}
+              </mat-option>
+            </mat-select>
             <mat-error
               *ngIf="
                 form.get('departamento')?.invalid &&
@@ -41,6 +37,21 @@
               "
             >
               {{ errorService.getErrorMessage(form, "departamento") }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field>
+            <mat-label>Ciudad</mat-label>
+            <mat-select formControlName="ciudad">
+              <mat-option *ngFor="let ciudad of ciudades" [value]="ciudad.name">
+                {{ ciudad.id }} - {{ ciudad.name }}
+              </mat-option>
+            </mat-select>
+            <mat-error
+              *ngIf="form.get('ciudad')?.invalid && form.get('ciudad')?.touched"
+            >
+              {{ errorService.getErrorMessage(form, "ciudad") }}
             </mat-error>
           </mat-form-field>
         </div>
@@ -166,7 +177,7 @@
           Cancelar
         </button>
         <button
-          (click)="guardarCliente()"
+          (click)="guardarPropiedad()"
           mat-raised-button
           color="accent"
           class="btn"
@@ -175,7 +186,7 @@
           Agregar
         </button>
         <button
-          (click)="editarCliente()"
+          (click)="editarPropiedad()"
           mat-raised-button
           color="accent"
           class="btn"
@@ -187,3 +198,4 @@
     </form>
   </mat-card-content>
 </mat-card>
+

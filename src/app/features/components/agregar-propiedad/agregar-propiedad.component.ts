@@ -6,6 +6,8 @@ import { DialogData } from '../../interfaces/dialog-data.interface';
 import { InventarioService } from '../../services/inventario.service';
 import { ErrorService } from '../../services/errores.service';
 import { Propiedad } from '../../interfaces/propiedad.interface';
+import { UbicacionService } from '../../services/ubicacion.service';
+import { Ubicacion } from '../../interfaces/ubicacion.interface';
 
 @Component({
   selector: 'app-agregar-propiedad',
@@ -18,18 +20,54 @@ export class AgregarPropiedadComponent implements OnInit {
   inputdata: any;
   editdata: any;
 
+  dptos: Ubicacion[];
+  ciudades: Ubicacion[];
+  validar: boolean = false;
+
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
     private ref: MatDialogRef<AgregarPropiedadComponent>,
     private fb: FormBuilder,
     public readonly errorService: ErrorService,
     private notificacionService: NotificationService,
-    //private loadingService: LoadingService
-    private inventarioService: InventarioService
+    private inventarioService: InventarioService,
+    private ubicacionService: UbicacionService
   ) {}
 
   ngOnInit(): void {
-    this.initFormBuilder();
+    this.consultarDeptos();
+  }
+
+  consultarDeptos(): void {
+    this.ubicacionService.consultarDepartamentos().subscribe({
+      next: (response) => {
+        this.dptos = response;
+        this.dptos.sort((a, b) => a.id - b.id);
+
+        if (this.data.edit) {
+          this.consultarCiudades(this.data.data.departamento);
+        }
+
+        setTimeout(() => {
+          this.initFormBuilder();
+          this.validar = true;
+        }, 200);
+      },
+      error: () => {},
+    });
+  }
+
+  consultarCiudades(nameDepto: string): void {
+    this.ciudades = [];
+    const idDpto: number =
+      this.dptos.find((depto) => depto.name === nameDepto).id ?? 0;
+
+    this.ubicacionService.consultarCiudades(idDpto).subscribe({
+      next: (response) => {
+        this.ciudades = response;
+        this.ciudades.sort((a, b) => a.id - b.id);
+      },
+    });
   }
 
   private initFormBuilder() {
@@ -82,7 +120,7 @@ export class AgregarPropiedadComponent implements OnInit {
     this.ref.close('Closed using function');
   }
 
-  guardarCliente() {
+  guardarPropiedad() {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
@@ -90,7 +128,6 @@ export class AgregarPropiedadComponent implements OnInit {
 
     const propiedadNueva: Propiedad = this.obtenerDatosForm();
 
-    //this.loadingService.show();
     this.inventarioService.guardarPropiedad(propiedadNueva).subscribe({
       next: () => {
         this.notificacionService.openSnackBar(
@@ -110,10 +147,9 @@ export class AgregarPropiedadComponent implements OnInit {
         );
       },
     });
-    //.add(() => this.loadingService.hide());
   }
 
-  editarCliente() {
+  editarPropiedad() {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
@@ -121,7 +157,6 @@ export class AgregarPropiedadComponent implements OnInit {
     const propiedadEditada: Propiedad = this.obtenerDatosForm();
     propiedadEditada.id = this.data.data?.id ?? 0;
 
-    //this.loadingService.show();
     this.inventarioService.editarPropiedad(propiedadEditada).subscribe({
       next: () => {
         this.notificacionService.openSnackBar(
@@ -141,7 +176,6 @@ export class AgregarPropiedadComponent implements OnInit {
         );
       },
     });
-    //.add(() => this.loadingService.hide());
   }
 
   obtenerDatosForm(): Propiedad {
@@ -155,7 +189,7 @@ export class AgregarPropiedadComponent implements OnInit {
       precio,
       metros2,
       estado,
-      descripcion
+      descripcion,
     } = this.form.value;
 
     const propiedad: Propiedad = {
@@ -168,7 +202,7 @@ export class AgregarPropiedadComponent implements OnInit {
       precio,
       metrosCuadrados: metros2,
       estado,
-      descripcion
+      descripcion,
     };
 
     return propiedad;

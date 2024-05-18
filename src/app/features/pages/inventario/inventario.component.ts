@@ -41,16 +41,13 @@ export class InventarioComponent implements OnInit, AfterViewInit {
     new MatTableDataSource<Propiedad>();
 
   constructor(
-    // private clienteService: ClienteService,
     private dialog: MatDialog,
     private notificacionService: NotificationService,
-    //private loadingService: LoadingService
     private inventarioService: InventarioService
   ) {}
 
   ngOnInit(): void {
     this.consultarPropiedades();
-
     this.informacionPropiedadesMatData.filterPredicate = (
       data,
       filter: string
@@ -72,7 +69,6 @@ export class InventarioComponent implements OnInit, AfterViewInit {
   }
 
   consultarPropiedades(): void {
-    //this.loadingService.show();
     this.inventarioService.consultarPropiedades().subscribe({
       next: (response) => {
         this.informacionPropiedadesMatData.data = response;
@@ -82,7 +78,6 @@ export class InventarioComponent implements OnInit, AfterViewInit {
         this.informacionPropiedadesMatData.data = [];
       },
     });
-    //  .add(() => this.loadingService.hide());
   }
 
   agregarPropiedad(): void {
@@ -132,7 +127,6 @@ export class InventarioComponent implements OnInit, AfterViewInit {
 
     dialog.afterClosed().subscribe((res) => {
       if (res) {
-        //this.loadingService.show();
         this.inventarioService
           .eliminarPropiedad(propiedadSeleccionada.id)
           .subscribe({
@@ -154,7 +148,6 @@ export class InventarioComponent implements OnInit, AfterViewInit {
               );
             },
           });
-        //.add(() => this.loadingService.hide());
       }
     });
   }
