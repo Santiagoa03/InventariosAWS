@@ -1,0 +1,181 @@
+<div class="p-10">
+  <mat-card class="rounded-lg shadow-md">
+    <mat-card-header class="header-1 bg-blue-800 text-white rounded-t-lg">
+      <mat-card-title class="uppercase">Gestión de Inventarios</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="mt-8">
+        <mat-card-title>Filtro de propiedad</mat-card-title>
+        <div class="m-4">
+          <div class="flex mt-8 space-x-4 container-form">
+            <div class="w-full">
+              <mat-form-field class="w-full">
+                <mat-label>Id</mat-label>
+                <input
+                  matInput
+                  placeholder="Id"
+                  [(ngModel)]="filtroNroDocumento"
+                  (keyup)="aplicarFiltros()"
+                  class="w-full"
+                />
+              </mat-form-field>
+            </div>
+
+            <div class="w-full">
+              <mat-form-field class="w-full">
+                <mat-label>Nombre Propiedad</mat-label>
+                <input
+                  matInput
+                  placeholder="Nombre"
+                  [(ngModel)]="filtroDescripcion"
+                  (keyup)="aplicarFiltros()"
+                  class="w-full"
+                />
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </div>
+      <mat-card class="mb-6 mt-7">
+        <mat-card-header class="bg-blue-800 text-white rounded-t-lg">
+          <mat-card-title class="uppercase">Propiedades</mat-card-title>
+          <div class="spacer"></div>
+          <button
+            mat-button
+            color="primary"
+            class="add-client-button"
+            (click)="agregarPropiedad()"
+          >
+            Agregar Propiedad <mat-icon matSuffix>add</mat-icon>
+          </button>
+        </mat-card-header>
+
+        <div class="overflow-x-auto">
+          <table
+            mat-table
+            class="w-full border-collapse"
+            [dataSource]="informacionPropiedadesMatData"
+          >
+            <ng-container matColumnDef="id">
+              <th mat-header-cell *matHeaderCellDef class="text-center">Id</th>
+              <td mat-cell *matCellDef="let element" class="text-center">
+                {{ element.id }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="nombre">
+              <th mat-header-cell *matHeaderCellDef class="text-center">
+                Nombre
+              </th>
+              <td mat-cell *matCellDef="let element" class="text-center">
+                {{ element.nombre }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="ciudad">
+              <th mat-header-cell *matHeaderCellDef class="text-center">
+                Ciudad
+              </th>
+              <td mat-cell *matCellDef="let element" class="text-center">
+                {{ element.ciudad }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="departamento">
+              <th class="text-center" mat-header-cell *matHeaderCellDef>
+                Departamento
+              </th>
+              <td class="text-center" mat-cell *matCellDef="let element">
+                {{ element.departamento }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="direccion">
+              <th class="text-center" mat-header-cell *matHeaderCellDef>
+                Dirección
+              </th>
+              <td class="text-center" mat-cell *matCellDef="let element">
+                {{ element.direccion }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="metros2">
+              <th class="text-center" mat-header-cell *matHeaderCellDef>
+                Metros Cuadrados
+              </th>
+              <td class="text-center" mat-cell *matCellDef="let element">
+                {{ element.metrosCuadrados }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="tipo">
+              <th class="text-center" mat-header-cell *matHeaderCellDef>
+                Tipo de vivienda
+              </th>
+              <td class="text-center" mat-cell *matCellDef="let element">
+                {{ element.tipo }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="transaccion">
+              <th class="text-center" mat-header-cell *matHeaderCellDef>
+                Disponible para
+              </th>
+              <td class="text-center" mat-cell *matCellDef="let element">
+                {{ element.transaccion }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="precio">
+              <th class="text-center" mat-header-cell *matHeaderCellDef>
+                Precio
+              </th>
+              <td class="text-center" mat-cell *matCellDef="let element">
+                {{ element.precio }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="estado">
+              <th class="text-center" mat-header-cell *matHeaderCellDef>
+                Estado
+              </th>
+              <td class="text-center" mat-cell *matCellDef="let element">
+                {{ element.estado }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="acciones">
+              <th class="text-center" mat-header-cell *matHeaderCellDef>
+                Acciones
+              </th>
+              <td class="text-center" mat-cell *matCellDef="let element">
+                <button
+                  mat-icon-button
+                  color="primary"
+                  (click)="editarPropiedad(element)"
+                >
+                  <mat-icon matSuffix>edit</mat-icon>
+                </button>
+
+                <button
+                  color="accent"
+                  mat-icon-button
+                  (click)="eliminarPropiedad(element)"
+                >
+                  <mat-icon matSuffix>delete</mat-icon>
+                </button>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          </table>
+        </div>
+        <mat-paginator
+          [pageSizeOptions]="[10, 15]"
+          showFirstLastButtons
+        ></mat-paginator>
+      </mat-card>
+    </mat-card-content>
+  </mat-card>
+</div>
